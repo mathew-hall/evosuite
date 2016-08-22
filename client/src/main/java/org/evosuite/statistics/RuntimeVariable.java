@@ -224,6 +224,8 @@ public enum RuntimeVariable {
 	NumUnstableTests, 
 	/** Number of regression test cases */
 	NumRegressionTestCases,
+	/** Number of test cases of the augmented test suite */
+	SizeAugmentedTestSuite,
 	/** An estimate (ie not precise) of the maximum number of threads running at the same time in the CUT */
 	Threads,
 	/** Number of top-level methods throwing an undeclared exception explicitly with a 'throw new' */

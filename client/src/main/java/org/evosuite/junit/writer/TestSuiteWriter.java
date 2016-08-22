@@ -42,6 +42,7 @@ import org.evosuite.testcase.statements.FunctionalMockStatement;
 import org.evosuite.testcase.statements.Statement;
 import org.evosuite.utils.ArrayUtil;
 import org.evosuite.utils.FileIOUtils;
+import org.evosuite.utils.LoggingUtils;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.objectweb.asm.Opcodes;
@@ -241,8 +242,8 @@ public class TestSuiteWriter implements Opcodes {
             generated.add(file);
         } else {
             for (int i = 0; i < testCases.size(); i++) {
-                String testSuiteName = name.substring(0, name.length() - "Test".length()) + "_" + i + "_Test";
-                File file = new File(dir + "/" + testSuiteName + ".java");
+                File file = new File(dir + "/" + name + "_" + i + ".java"); // e.g., dir/Foo_ESTest_0.java
+                LoggingUtils.getEvoLogger().info("* Writing JUnit test case '" + (name + "_" + i) + "' to " + file.getAbsolutePath());
                 //executor.newObservers();
                 String testCode = getOneUnitTestInAFile(name, i, results);
                 FileIOUtils.writeFile(testCode, file);
@@ -301,7 +302,7 @@ public class TestSuiteWriter implements Opcodes {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append(getHeader(name, results));
+        builder.append(getHeader(name, name, results));
 
         if (!Properties.TEST_SCAFFOLDING) {
             builder.append(new Scaffolding().getBeforeAndAfterMethods(name, wasSecurityException, results));
@@ -332,10 +333,10 @@ public class TestSuiteWriter implements Opcodes {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append(getHeader(name + "_" + testId, results));
+        builder.append(getHeader(name + "_" + testId, name, results));
 
         if (!Properties.TEST_SCAFFOLDING) {
-            builder.append(new Scaffolding().getBeforeAndAfterMethods(name, wasSecurityException, results));
+            builder.append(new Scaffolding().getBeforeAndAfterMethods(name + "_" + testId, wasSecurityException, results));
         }
 
         builder.append(testToString(testId, testId, results.get(testId)));
@@ -491,7 +492,7 @@ public class TestSuiteWriter implements Opcodes {
      * @param results a {@link java.util.List} object.
      * @return a {@link java.lang.String} object.
      */
-    protected String getHeader(String name, List<ExecutionResult> results) {
+    protected String getHeader(String test_name, String scaffolding_name, List<ExecutionResult> results) {
         StringBuilder builder = new StringBuilder();
         builder.append("/*");
         builder.append(NEWLINE);
@@ -518,10 +519,10 @@ public class TestSuiteWriter implements Opcodes {
             builder.append(getRunner());
         }
 
-        builder.append(adapter.getClassDefinition(name));
+        builder.append(adapter.getClassDefinition(test_name));
 
         if (Properties.TEST_SCAFFOLDING) {
-            builder.append(" extends " + Scaffolding.getFileName(name));
+            builder.append(" extends " + Scaffolding.getFileName(scaffolding_name));
         }
 
         builder.append(" {");
