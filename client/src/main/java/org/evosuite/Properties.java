@@ -55,6 +55,7 @@ public class Properties {
 
 	private final static Logger logger = LoggerFactory.getLogger(Properties.class);
 
+
 	/**
 	 * Parameters are fields of the Properties class, annotated with this
 	 * annotation. The key parameter is used to identify values in property
@@ -167,6 +168,11 @@ public class Properties {
 	@Parameter(key = "primitive_pool", group = "Test Creation", description = "Probability to use a primitive from the pool rather than a random value")
 	@DoubleValue(min = 0.0, max = 1.0)
 	public static double PRIMITIVE_POOL = 0.5;
+
+
+	@Parameter(key = "language_model", group = "Test Creation", description = "Probability to use replace a string with a language model string")
+	@DoubleValue(min = 0.0, max = 1.0)
+	public static double LANGUAGE_MODEL = 0.5;
 
 	/** Constant <code>DYNAMIC_POOL=0.5</code> */
 	@Parameter(key = "dynamic_pool", group = "Test Creation", description = "Probability to use a primitive from the dynamic pool rather than a random value")

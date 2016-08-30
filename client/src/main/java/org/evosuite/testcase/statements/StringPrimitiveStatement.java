@@ -28,6 +28,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
+import org.evosuite.lm.LanguageModel;
 import org.evosuite.Properties;
 import org.evosuite.seeding.ConstantPool;
 import org.evosuite.seeding.ConstantPoolManager;
@@ -35,7 +36,6 @@ import org.evosuite.testcase.TestCase;
 import org.evosuite.testcase.execution.CodeUnderTestException;
 import org.evosuite.testcase.execution.Scope;
 import org.evosuite.utils.Randomness;
-import org.objectweb.asm.commons.GeneratorAdapter;
 
 /**
  * <p>
@@ -187,7 +187,9 @@ public class StringPrimitiveStatement extends PrimitiveStatement<String> {
 	/** {@inheritDoc} */
 	@Override
 	public void randomize() {
-		if (Randomness.nextDouble() >= Properties.PRIMITIVE_POOL)
+		if(  Randomness.nextDouble() >= Properties.LANGUAGE_MODEL){
+			value = LanguageModel.replace(value);
+		}else if (Randomness.nextDouble() >= Properties.PRIMITIVE_POOL)
 			value = Randomness.nextString(Randomness.nextInt(Properties.STRING_LENGTH));
 		else {
 			ConstantPool constantPool = ConstantPoolManager.getInstance().getConstantPool();
